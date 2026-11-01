@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "mcLq+/grnaM=",
+  "dgSpecHash": "t9SMk6x/j94=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Trung Anh\\Downloads\\PricingService\\PricingService.csproj",
+  "projectFilePath": "C:\\Users\\Trung Anh\\Downloads\\bai_thuc_hanh_tai_nha\\PricingService\\PricingService.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Trung Anh\\.nuget\\packages\\fluentvalidation\\11.9.2\\fluentvalidation.11.9.2.nupkg.sha512",
     "C:\\Users\\Trung Anh\\.nuget\\packages\\mediatr\\12.3.0\\mediatr.12.3.0.nupkg.sha512",
     "C:\\Users\\Trung Anh\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\Trung Anh\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\8.0.6\\microsoft.aspnetcore.jsonpatch.8.0.6.nupkg.sha512",
