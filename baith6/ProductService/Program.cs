@@ -19,7 +19,8 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddEurekaDiscoveryClient();
+if (builder.Configuration.GetValue<bool?>("LocalDevelopment:UseServiceDiscovery") != false)
+    builder.Services.AddEurekaDiscoveryClient();
 builder.Services.AddEFConfiguration(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddProductDemoInitializer();

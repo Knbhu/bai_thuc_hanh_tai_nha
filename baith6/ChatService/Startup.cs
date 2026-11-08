@@ -84,7 +84,8 @@ public class Startup
 
         services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
-        services.AddRabbitListeners();
+        if (Configuration.GetValue<bool?>("RabbitMq:Enabled") != false)
+            services.AddRabbitListeners();
         
         services.AddSwaggerGen();
     }
@@ -115,6 +116,7 @@ public class Startup
             endpoints.MapHub<AgentChatHub>("/agentsChat");
         });
 
-        app.UseRabbitListeners(new List<Type> { typeof(PolicyCreated) });
+        if (Configuration.GetValue<bool?>("RabbitMq:Enabled") != false)
+            app.UseRabbitListeners(new List<Type> { typeof(PolicyCreated) });
     }
 }

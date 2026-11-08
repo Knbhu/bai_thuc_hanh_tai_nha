@@ -21,7 +21,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddEurekaDiscoveryClient();
+        if (Configuration.GetValue<bool?>("LocalDevelopment:UseServiceDiscovery") != false)
+            services.AddEurekaDiscoveryClient();
         services.AddControllers().AddNewtonsoftJson();
         services.AddMediatR(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(CalculatePriceHandler).Assembly));

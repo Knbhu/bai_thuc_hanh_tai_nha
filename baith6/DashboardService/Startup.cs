@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DashboardService.DataAccess.Elastic;
 using DashboardService.Domain;
-using DashboardService.Init;
 using DashboardService.Messaging.RabbitMq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PolicyService.Api.Events;
 using Steeltoe.Discovery.Eureka;
+using DashboardService.DataAccess.Sql;
 
 namespace DashboardService;
 
@@ -26,14 +25,15 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddEurekaDiscoveryClient();
+        if (Configuration.GetValue<bool?>("LocalDevelopment:UseServiceDiscovery") != false)
+            services.AddEurekaDiscoveryClient();
         services.AddMvc()
             .AddNewtonsoftJson();
         services.AddMediatR(opts => opts.RegisterServicesFromAssemblyContaining<Startup>());
-        services.AddElasticSearch(Configuration.GetConnectionString("ElasticSearchConnection"));
-        services.AddSingleton<IPolicyRepository, ElasticPolicyRepository>();
-        services.AddRabbitListeners(Configuration.GetSection("RabbitMqOptions").Get<RabbitMqOptions>());
-        services.AddInitialSalesData();
+        services.AddSingleton<IPolicyRepository>(_ =>
+            new SqlPolicyRepository(Configuration.GetConnectionString("SqlServer")));
+        if (Configuration.GetValue<bool?>("RabbitMqOptions:Enabled") != false)
+            services.AddRabbitListeners(Configuration.GetSection("RabbitMqOptions").Get<RabbitMqOptions>());
         services.AddSwaggerGen();
     }
 
@@ -56,6 +56,7 @@ public class Startup
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-        app.UseRabbitListeners(new List<Type> { typeof(PolicyCreated) });
+        if (Configuration.GetValue<bool?>("RabbitMqOptions:Enabled") != false)
+            app.UseRabbitListeners(new List<Type> { typeof(PolicyCreated) });
     }
 }
